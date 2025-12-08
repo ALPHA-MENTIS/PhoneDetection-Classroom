@@ -1,0 +1,2 @@
+/home/alpha/ALPHA[[:space:]]PY/phone-detection-app/best.pt filter=lfs diff=lfs merge=lfs -text
+best.pt filter=lfs diff=lfs merge=lfs -text
