@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Report Generator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .report-box {
+            background: rgba(44, 62, 80, 0.85);
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 20px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+        }
+        .report-title {
+            font-size: 1.6em;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .report-output {
+            white-space: pre-wrap;
+            background: rgba(0,0,0,0.4);
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 12px;
+            min-height: 200px;
+        }
+        .back-btn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #3498db;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <div class="header-icon">📄</div>
+            <h1>REPORT GENERATOR</h1>
+        </header>
+
+        <div class="report-box">
+            <div class="report-title">Generate Usage Report</div>
+
+            <label>Start Date:</label>
+            <input type="date" id="start">
+
+            <label>End Date:</label>
+            <input type="date" id="end">
+
+            <label>Camera Name:</label>
+            <input type="text" id="camera" value="Camera_01">
+
+            <button class="browse-btn" onclick="generateReport()">GENERATE</button>
+
+            <div id="reportOutput" class="report-output"></div>
+
+            <button class="back-btn" onclick="window.location.href='/'">⬅ Back to Home</button>
+        </div>
+    </div>
+
+<script>
+async function generateReport() {
+    const start = document.getElementById("start").value;
+    const end = document.getElementById("end").value;
+    const camera = document.getElementById("camera").value;
+    const out = document.getElementById("reportOutput");
+
+    out.innerHTML = "Generating report...";
+
+    const res = await fetch("/generate_report", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({start_date: start, end_date: end, camera: camera})
+    });
+
+    const data = await res.json();
+    out.innerHTML = data.success ? data.summary : data.error;
+}
+</script>
+
+</body>
+</html>
