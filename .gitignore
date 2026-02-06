@@ -1,0 +1,14 @@
+# Python junk
+__pycache__/
+*.pyc
+*.cpython-*
+
+# Virtual environments
+.venv/
+yolo_env/
+
+# Editor config
+.vscode/
+
+# Local test files
+video.mp4

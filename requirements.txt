@@ -1,6 +1,8 @@
-flask>=3.0.0
-opencv-python>=4.8.0
-ultralytics>=8.3.0
-numpy>=1.26.0
-torch>=2.2.0
-torchvision>=0.17.0
+flask
+opencv-python-headless
+ultralytics
+numpy
+lapx>=0.5.5
+# torch and torchvision should correspond to CUDA 13
+# We will assume the user handles the specific torch installation for their cutting-edge hardware
+# or we can pin it if we knew the exact index, but usually it's safer to let them install the system-matched torch.

@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Sentry | Phone Detection</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #0f172a;
+            /* Slate 900 */
+            color: #f8fafc;
+            /* Slate 50 */
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .container {
+            text-align: center;
+            width: 100%;
+            max-width: 1280px;
+            padding: 20px;
+        }
+
+        h1 {
+            font-weight: 700;
+            letter-spacing: -0.025em;
+            margin-bottom: 24px;
+            font-size: 2.5rem;
+            background: linear-gradient(to right, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .video-wrapper {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background: #1e293b;
+            /* Slate 800 */
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            border: 1px solid #334155;
+        }
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .status-dot {
+            height: 10px;
+            width: 10px;
+            background-color: #22c55e;
+            /* Green 500 */
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+            box-shadow: 0 0 10px #22c55e;
+            animation: pulse 2s infinite;
+        }
+
+        .status-bar {
+            margin-top: 16px;
+            color: #94a3b8;
+            font-size: 0.875rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding: 0 4px;
+        }
+
+        .btn {
+            background-color: #3b82f6;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn:hover {
+            background-color: #2563eb;
+        }
+
+        .btn.paused {
+            background-color: #eab308;
+            /* Yellow for pause state */
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(0.95);
+                opacity: 0.7;
+            }
+
+            50% {
+                transform: scale(1);
+                opacity: 1;
+                box-shadow: 0 0 15px #22c55e;
+            }
+
+            100% {
+                transform: scale(0.95);
+                opacity: 0.7;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>SENTRY AI</h1>
+        <div class="video-wrapper">
+            <img src="{{ url_for('video_feed') }}" alt="Live Feed">
+        </div>
+        <div class="status-bar">
+            <div>
+                <span class="status-dot"></span><span id="system-status">SYSTEM ONLINE</span>
+            </div>
+            <button id="pause-btn" class="btn" onclick="togglePause()">PAUSE STREAM</button>
+            <span>RTX 5080 ACTIVE | CUDA 13</span>
+        </div>
+    </div>
+
+    <script>
+        function togglePause() {
+            fetch('/toggle_pause', { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    const btn = document.getElementById('pause-btn');
+                    const status = document.getElementById('system-status');
+                    const dot = document.querySelector('.status-dot');
+
+                    if (data.paused) {
+                        btn.innerText = "RESUME STREAM";
+                        btn.classList.add('paused');
+                        status.innerText = "SYSTEM PAUSED";
+                        dot.style.animation = 'none';
+                        dot.style.opacity = '0.5';
+                    } else {
+                        btn.innerText = "PAUSE STREAM";
+                        btn.classList.remove('paused');
+                        status.innerText = "SYSTEM ONLINE";
+                        dot.style.animation = 'pulse 2s infinite';
+                    }
+                });
+        }
+    </script>
+</body>
+
+</html>
